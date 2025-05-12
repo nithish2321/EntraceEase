@@ -3,7 +3,6 @@ import { getProfile, updateProfile, getAvailability, getBookingHistory, updateBo
 
 function TestCenterDashboard({ token, testCenterId, onLogout }) {
   const [profile, setProfile] = useState({});
-  const [editMode, setEditMode] = useState(false);
   const [availability, setAvailability] = useState({ TotalVaccancy: 0, BookingAvailableSeats: [] });
   const [history, setHistory] = useState([]);
   const [expanded, setExpanded] = useState({});
@@ -29,7 +28,6 @@ function TestCenterDashboard({ token, testCenterId, onLogout }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await updateProfile("test-center", token, profile);
-    setEditMode(false);
   };
 
   const toggleExpand = (id) => {
@@ -109,7 +107,7 @@ function TestCenterDashboard({ token, testCenterId, onLogout }) {
           <h2 style={{
             fontSize: '2rem',
             fontWeight: '700',
-            color: '#1f2a44',
+            color: "#1e3a8a",
           }}>Test Center Dashboard</h2>
           <button
             onClick={onLogout}
@@ -136,132 +134,28 @@ function TestCenterDashboard({ token, testCenterId, onLogout }) {
           padding: '1.5rem',
           borderRadius: '8px',
           marginBottom: '1.5rem',
-        }}>
-          {editMode ? (
-            <form
-              onSubmit={handleSubmit}
-              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
-            >
-              {Object.keys(profile).map(
-                (key) =>
-                  key !== "_id" &&
-                  key !== "__v" &&
-                  key !== "BookingAvailableSeats" &&
-                  key !== "BookingHistory" &&
-                  key !== "NormalVaccancy" && (
-                    <div key={key}>
-                      <label style={{
-                        display: 'block',
-                        fontSize: '1rem',
-                        fontWeight: '500',
-                        color: '#374151',
-                        marginBottom: '0.25rem',
-                      }}>
-                        {key.replace(/([A-Z])/g, " $1").trim()}
-                      </label>
-                      <input
-                        type={key === "TotalVaccancy" ? "number" : "text"}
-                        name={key}
-                        value={profile[key] || ""}
-                        onChange={handleChange}
-                        placeholder={key.replace(/([A-Z])/g, " $1").trim()}
-                        style={{
-                          width: '100%',
-                          padding: '0.75rem',
-                          border: '1px solid #d1d5db',
-                          borderRadius: '8px',
-                          fontSize: '1rem',
-                          color: '#1f2a44',
-                          outline: 'none',
-                          transition: 'border-color 0.2s ease',
-                        }}
-                        onFocus={(e) => e.target.style.borderColor = '#4f46e5'}
-                        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-                      />
-                    </div>
-                  )
-              )}
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button
-                  type="submit"
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    backgroundColor: '#4f46e5',
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease',
-                  }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#4338ca'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#4f46e5'}
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEditMode(false)}
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    backgroundColor: '#e5e7eb',
-                    color: '#374151',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease',
-                  }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#d1d5db'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#e5e7eb'}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          ) : (
+        }}>          {(
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <h3 style={{
                 fontSize: '1.5rem',
                 fontWeight: '600',
                 color: '#1f2a44',
-              }}>Profile Details</h3>
-              {Object.keys(profile).map(
+              }}>Profile Details</h3>              {Object.keys(profile).map(
                 (key) =>
                   key !== "_id" &&
                   key !== "__v" &&
                   key !== "BookingAvailableSeats" &&
                   key !== "BookingHistory" &&
-                  key !== "NormalVaccancy" && (
+                  key !== "NormalVaccancy" &&
+                  key !== "TotalVaccancy" && (
                     <p key={key} style={{
                       fontSize: '1rem',
                       color: '#6b7280',
                     }}>
-                      <span style={{ fontWeight: '500' }}>{key.replace(/([A-Z])/g, " $1").trim()}:</span> {profile[key]}
+                      <span style={{ fontWeight: '500', }}>{key.replace(/([A-Z])/g, " $1").trim()}:</span> {profile[key]}
                     </p>
                   )
               )}
-              <button
-                onClick={() => setEditMode(true)}
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: '#4f46e5',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  width: 'fit-content',
-                  transition: 'background-color 0.2s ease',
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#4338ca'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#4f46e5'}
-              >
-                Edit Profile
-              </button>
             </div>
           )}
         </div>
@@ -271,8 +165,7 @@ function TestCenterDashboard({ token, testCenterId, onLogout }) {
           padding: '1.5rem',
           borderRadius: '8px',
           marginBottom: '1.5rem',
-        }}>
-          <h3 style={{
+        }}>          <h3 style={{
             fontSize: '1.5rem',
             fontWeight: '600',
             color: '#1f2a44',

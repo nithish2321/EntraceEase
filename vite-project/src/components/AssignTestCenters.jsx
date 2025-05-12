@@ -37,15 +37,12 @@ function AssignTestCenters({ token, collegeId }) {
         }
       );
       console.log('Assignment response:', response.data); // Debug log
-      response.data.assignments.forEach((newAssignment, index) => {
-        setTimeout(() => {
-          setAssignments((prev) => [...prev, newAssignment]);
-        }, index * 300);
-      });
       setEmailSummary(response.data.emailSummary);
       setMessage(
         `Test centers assigned. Emails: ${response.data.emailSummary.sent} sent, ${response.data.emailSummary.failed} failed, ${response.data.emailSummary.pending} pending`
       );
+      // Refresh the table by fetching the latest assignments
+      await fetchAssignments();
     } catch (error) {
       console.error('Error assigning test centers:', error.response?.data || error.message);
       setMessage(error.response?.data?.error || 'Error assigning test centers');

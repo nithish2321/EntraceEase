@@ -21,47 +21,95 @@ function CollegeForm({ onChange }) {
     ExamMode: "",
   });
 
+  // State to track hover and focus for each input
+  const [hoverStates, setHoverStates] = useState(
+    Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: false }), {})
+  );
+  const [focusStates, setFocusStates] = useState(
+    Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: false }), {})
+  );
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const newData = { ...formData, [name]: name === "ExamFees" || name === "AgeLimit" || name === "PreviousYearCutOff" || name === "ExamDuration" ? parseInt(value) || 0 : value };
-    if (name === "ExamSlots") newData[name] = value.split(",").map((s) => s.trim()).filter(Boolean);
+    const newData = {
+      ...formData,
+      [name]:
+        ["ExamFees", "AgeLimit", "PreviousYearCutOff", "ExamDuration"].includes(name)
+          ? parseInt(value) || 0
+          : value,
+    };
+    if (name === "ExamSlots") {
+      newData[name] = value.split(",").map((s) => s.trim()).filter(Boolean);
+    }
     setFormData(newData);
     onChange(newData);
   };
 
+  // Base input style
+  const inputStyle = {
+    padding: "0.65rem 0",
+    border: "none",
+    borderBottom: "1px solid #ccc",
+    fontSize: "0.95rem",
+    backgroundColor: "transparent",
+    color: "#333", // Dark color for visibility on light background
+    outline: "none",
+    transition: "all 0.3s ease-in-out",
+    caretColor: "#00ddeb",
+  };
+
+  // Hover and focus styles
+  const inputHoverStyle = {
+    borderBottom: "1px solid #e0ffff", // Light cyan for hover
+  };
+
+  const inputFocusStyle = {
+    borderBottom: "1px solid #00ddeb", // Teal for focus, matching the image
+  };
+
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '2rem 1rem', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-      <div style={{ maxWidth: '600px', width: '100%', backgroundColor: '#ffffff', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#1a202c', textAlign: 'center', marginBottom: '1.5rem' }}>College Authority Form</h2>
-        {Object.keys(formData).map((key) => (
-          <div key={key} style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#4a5568', marginBottom: '0.5rem' }}>
-              {key.replace(/([A-Z])/g, " $1").trim()}
-            </label>
-            <input
-              type={key.includes("Fees") || key.includes("Age") || key.includes("CutOff") || key.includes("Duration") ? "number" : "text"}
-              name={key}
-              placeholder={key.replace(/([A-Z])/g, " $1").trim()}
-              value={formData[key]}
-              onChange={handleChange}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #e2e8f0',
-                borderRadius: '6px',
-                fontSize: '0.875rem',
-                color: '#2d3748',
-                boxSizing: 'border-box',
-                transition: 'border-color 0.2s',
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#63b3ed'}
-              onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
-            />
-          </div>
-        ))}
+    <div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+        {Object.keys(formData).map((key) => {
+          // Combine styles dynamically for each input
+          const combinedInputStyle = {
+            ...inputStyle,
+            ...(hoverStates[key] && !focusStates[key] ? inputHoverStyle : {}),
+            ...(focusStates[key] ? inputFocusStyle : {}),
+          };
+
+          return (
+            <div key={key} style={{ display: "flex", flexDirection: "column" }}>
+              <label style={labelStyle}>{key.replace(/([A-Z])/g, " $1").trim()}</label>
+              <input
+                type={
+                  key.includes("Fees") || key.includes("Age") || key.includes("CutOff") || key.includes("Duration")
+                    ? "number"
+                    : "text"
+                }
+                name={key}
+                placeholder={key.replace(/([A-Z])/g, " $1").trim()}
+                value={Array.isArray(formData[key]) ? formData[key].join(", ") : formData[key]}
+                onChange={handleChange}
+                style={combinedInputStyle}
+                onMouseEnter={() => setHoverStates((prev) => ({ ...prev, [key]: true }))}
+                onMouseLeave={() => setHoverStates((prev) => ({ ...prev, [key]: false }))}
+                onFocus={() => setFocusStates((prev) => ({ ...prev, [key]: true }))}
+                onBlur={() => setFocusStates((prev) => ({ ...prev, [key]: false }))}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
+const labelStyle = {
+  fontSize: "1rem",
+  fontWeight: "800",
+  color: "rgb(124, 176, 255)",
+  marginBottom: "0.5rem",
+  display: "block",
+};
 
 export default CollegeForm;

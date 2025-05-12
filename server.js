@@ -35,8 +35,6 @@ const mailGenerator = new Mailgen({
   product: {
     name: 'Exam Management System',
     link: 'http://localhost:3000',
-    // Optional: Add a logo URL
-    // logo: 'https://your-logo-url.com/logo.png',
   },
 });
 
@@ -638,7 +636,6 @@ app.get('/students', authenticateToken, async (req, res) => {
   }
 });
 
-// Update StudentAssignmentSchema
 const StudentAssignmentSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Students', required: true },
   collegeId: { type: mongoose.Schema.Types.ObjectId, ref: 'College', required: true },
@@ -776,7 +773,7 @@ app.post('/api/assign-test-centers', authenticateToken, async (req, res) => {
     await StudentAssignment.deleteMany({ collegeId });
     const insertedAssignments = await StudentAssignment.insertMany(assignments);
 
-    host = "https://6cdftcxg-5173.inc1.devtunnels.ms"
+    host = " http://localhost:5173"
     // Send emails to students only if their email is in custom_emails
     const emailResults = [];
     for (const assignment of insertedAssignments) {

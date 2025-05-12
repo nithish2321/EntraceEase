@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
-import signature from '../assets/signature.png'; // Controller of Examinations signature
+import signature from '../assets/signature.png'; 
 
 function StudentDetails() {
   const { id } = useParams();
@@ -13,7 +13,7 @@ function StudentDetails() {
   const [loading, setLoading] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
 
-  const host = "https://6cdftcxg-5000.inc1.devtunnels.ms"
+  const host = "http://localhost:5000"
 
   // Fetch student name on load
   useEffect(() => {
